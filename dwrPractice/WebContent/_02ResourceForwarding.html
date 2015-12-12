@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ex02 Resource Forwarding</title>
+	<script type='text/javascript' src='dwr/engine.js'> </script>
+  	<script type='text/javascript' src='dwr/util.js'> </script>
+ 	 <script type='text/javascript' src='dwr/interface/Include.js'> </script>
+ 	 <script type='text/javascript' src='dwr/interface/Input.js'> </script>
+</head>
+<body>
+<h2>Resource Forwarding</h2>
+<p>
+DWR官方demo檔案:simple/resource.html<br>
+source檔案包含:_02Resource Forwarding.html,dwrPractice.ex02_IncludePage,dwr.xml,web.xml
+</p>
+<p>
+This is a simple demonstration of how to dynamically update a web-page with the contents of a page retrieved from the server.
+</p>
+<p>
+  <input value="Include Page" type="button" onclick="forward()"/><br/>
+  Included Page:
+</p>
+<div id="forward"></div>
+<hr>
+<p>
+  Name:
+  <input type="text" id="demoName"/>
+  <input value="Send" type="button" onclick="update()"/>
+  <br/>
+  Reply: <span id="demoReply"></span>
+</p>
+
+<script>
+function forward() {
+		Include.getInclude(function(data) {
+	    dwr.util.setValue("forward", data )//,{ escapeHtml:false }
+	  });
+	}
+	
+	
+function update() {
+	  var name = dwr.util.getValue("demoName");
+	  Input.sayHello(name, function(data) {
+	    dwr.util.setValue("demoReply", data);
+	  });
+	}
+</script>
+
+</body>
+</html>

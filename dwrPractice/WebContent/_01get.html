@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ex01</title>
+	
+<!-- 	engine.js , util.js在jar檔裡 -->
+<!--    Input.js是DWR依dwr.xml裡設定的mapping檔自動生成的檔案 -->
+<!--    路徑連結在web.xml裡的url pattern設定 -->
+	
+	<script type='text/javascript' src='dwr/engine.js'> </script>
+	<script type='text/javascript' src='dwr/util.js'> </script>
+	<script type='text/javascript' src='dwr/interface/Input.js'> </script>
+</head>
+<body>
+<p>
+DWR官方demo檔案:simple/text.html<br>
+source檔案包含:_01get.html,dwrPractice.ex01_InputServlet,dwr.xml,web.xml
+</p>
+<p>
+  Name:
+  <input type="text" id="demoName"/>
+  <input value="Send" type="button" onclick="update()"/>
+  <br/>
+  Reply: <span id="demoReply"></span>
+</p>
+
+<script>
+function update() {
+	  var name = dwr.util.getValue("demoName");
+	  Input.sayHello(name, function(data) {
+	    dwr.util.setValue("demoReply", data);
+	  });
+	}
+</script>
+
+
+</body>
+</html>

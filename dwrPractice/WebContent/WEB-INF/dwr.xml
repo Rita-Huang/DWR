@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd"> -->
+    <!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN" "http://getahead.org/dwr/dwr30.dtd">
+
+<dwr>
+	<allow>
+		<!-- example01:2.0版 -->
+		<create creator="new" javascript="Input">
+			<param name="class" value="dwrPractice.ex01_InputServlet" />
+		</create>
+		<!-- example02:2.0版 -->
+		<create creator="new" javascript="Include">
+			<param name="class" value="dwrPractice.ex02_IncludePage" />
+		</create>
+		
+		<!-- example03:2.0版 -->
+<!-- 		<create creator="new" javascript="People" scope="script"> -->
+<!-- 			<param name="class" value="ex03.People" /> -->
+<!-- 		</create> -->
+<!-- 		<convert match="ex03.Person" converter="bean" /> -->
+
+		<!-- example03:3.0版 -->
+		<create creator="new" scope="application">
+			<param name="class" value="ex03.People" />
+		</create>
+		<convert match="ex03.Person" converter="bean" ></convert>
+
+
+		<!-- example04:3.0版 -->
+		<create creator="new" scope="application">
+	    	<param name="class" value="dwrPractice.ex04_PeopleTable" />
+	    </create>
+		
+		<!-- example05:3.0版 -->
+		<create creator="new" scope="application">
+     		 <param name="class" value="dwrPractice.ex05_Clock"/>
+    	</create>
+
+
+		<!-- example06:3.0版 -->
+    	<create creator="new" scope="application">
+      		<param name="class" value="dwrPractice.JavascriptChat"/>
+    	</create>
+	    <convert converter="bean" match="dwrPractice.Message"/>
+	    
+	    <!-- example07:3.0版 -->
+	    <create creator="new" scope="application">
+      		<param name="class" value="dwrPractice.JavaChat"/>
+    	</create>
+    	
+	</allow>
+</dwr>

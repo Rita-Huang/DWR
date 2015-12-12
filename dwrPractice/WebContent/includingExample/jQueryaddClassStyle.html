@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>addClass Style</title>
+<style type="text/css">
+	.s1{
+		color:orange;
+		border:1px solid blue;
+		text-align:center;
+		width:300px;
+			}
+	.s2{
+		color:blue;
+		border:2px double orange;
+		text-align:center;
+		width:300px;
+		background:yellow;
+	}
+</style>
+</head>
+<body>
+	<h1>jQuery Style</h1>
+	<h1>jQuery Style</h1>
+	<h1>jQuery Style</h1>
+	<h1>jQuery Style</h1>
+	<h1 id="myH">jQuery Style</h1>
+	<input type="button" id="btnToggle" value="toggle">
+	
+	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+	<script>
+		$(function() {		
+			$('h1').addClass('s1').mouseover(over).mouseout(out);
+			function over() {
+				$(this).removeClass('s1').addClass('s2');
+			};
+			function out() {
+				$(this).removeClass('s2').addClass('s1');
+			};
+			
+			$("#btnToggle").click(function() {
+// 				if($('#myH').hasClass('s1')) {
+// 					$('#myH').removeClass('s1');
+// 				}else {
+// 					$('#myH').addClass('s1');
+// 				}
+// 				上面寫法=下面寫法
+				$('#myH').toggleClass('s2');
+			});
+		});
+	</script>
+</body>
+</html>

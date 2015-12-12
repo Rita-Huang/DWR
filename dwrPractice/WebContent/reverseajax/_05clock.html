@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Server Side Reverse Ajax Clock</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type='text/javascript' src='../dwr/engine.js'></script>
+        <script type='text/javascript' src='../dwr/util.js'></script>
+        <script type='text/javascript' src='../dwr/interface/ex05_Clock.js'></script>
+        <link rel="stylesheet" type="text/css" href="../generic.css" />
+        <script>
+            window.onload = function(){
+            	//開啟active reverse ajax
+                dwr.engine.setActiveReverseAjax(true);
+            	
+            	//設定errorHandler & pollStatusHandler
+                dwr.engine.setErrorHandler(errorHandler);
+                dwr.engine.setPollStatusHandler(updatePollStatus);
+                updatePollStatus(true);
+                
+                
+                ex05_Clock.setClockStatus();
+            }
+            
+          //設定errorHandler & pollStatusHandler
+            function errorHandler(message, ex){
+                dwr.util.setValue("error", "<font color='red'>Cannot connect to server. Initializing retry logic.</font>", {
+                    escapeHtml: false
+                });
+                setTimeout(function(){
+                    dwr.util.setValue("error", "");
+                }, 5000)
+            }
+            
+          //設定errorHandler & pollStatusHandler
+            function updatePollStatus(pollStatus){
+                dwr.util.setValue("pollStatus", pollStatus ? "<font color='green'>Online</font>" : "<font color='red'>Offline</font>", {
+                    escapeHtml: false
+                });
+            }
+            
+            function enableUpdates(enabled){
+                if (!enabled) {
+                    dwr.util.setValue("clockDisplay", "This tab/window does not have updates enabled.");
+                }
+                ex05_Clock.setEnabledAttribute(enabled);
+            }
+            
+            function setClockStatus(clockStatus){
+                dwr.util.setValue("clockStatus", clockStatus ? "Clock started" : "Clock stopped");
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Server Side Reverse Ajax Clock</h1>
+        <p>
+            Creating a clock in a web page is easy, but what about a clock controlled by
+            the server? This demo shows how use use a separate server side thread to control
+            a number of browsers.
+        </p>
+        <div id="tabContents">
+            <div id="demoDiv">
+                <input type="button" value="Start / Stop" onclick="ex05_Clock.toggle();"/> Server status: <span id="pollStatus"></span>
+                <div id="error">
+                </div>
+                <p>
+                </p>
+                <h2 id="clockStatus"></h2>
+                <h2 id="clockDisplay"></h2>
+            </div>
+            <div>
+                <h3>Filtering</h3>
+                <input type="button" value="Enable Updates" onclick="enableUpdates(true);">
+                <input type="button" value="Disable Updates" onclick="enableUpdates(false);">
+            </div>
+        </div>
+    </body>
+</html>

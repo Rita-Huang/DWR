@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Editable Table Demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<script type='text/javascript' src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
+<script type='text/javascript' src='dwr/interface/People.js'></script>
+<link rel="stylesheet" type="text/css" href="generic.css" />
+</head>
+<body onload="init();">
+	<h3>All People</h3>
+	<table border="1" class="rowed grey">
+		<thead>
+			<tr>
+				<th>Person</th>
+				<th>Age</th>
+				<th>Superhero?</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody id="peoplebody">
+			<tr id="pattern" style="display: none;">
+				<td><span id="tableName">Name</span><br /> <small> <span
+						id="tableAddress">Address</span></small></td>
+				<td><span id="tableAge">Age</span></td>
+				<td><span id="tableSuperhero">Superhero</span></td>
+				<td><input id="edit" type="button" value="Edit"
+					onclick="editClicked(this.id)" /> <input id="delete" type="button"
+					value="Delete" onclick="deleteClicked(this.id)" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<h3>Edit Person</h3>
+	<table class="plain">
+		<tr>
+			<td>Name:</td>
+			<td><input id="name" type="text" size="30" /></td>
+		</tr>
+		<tr>
+			<td>Address:</td>
+			<td><input id="address" type="text" size="40" /></td>
+		</tr>
+		<tr>
+			<td>Age:</td>
+			<td><input id="age" type="text" size="20" /></td>
+		</tr>
+		<tr>
+			<td>Superhero?:</td>
+			<td><input id="superhero" type="checkbox" size="20" /></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="right"><small>(ID=<span id="id">-1</span>)
+			</small> <input type="button" value="Save" onclick="writePerson()" /> <input
+				type="button" value="Clear" onclick="clearPerson()" /></td>
+		</tr>
+	</table>
+
+	<script>
+	//本例有用到的方法
+		//dwr.util.useLoadingMessage();
+		//dwr.util.removeAllRows(xx,xxxx)
+		//dwr.util.cloneNode("pattern", { idSuffix:id })
+		//dwr.util.setValue("tableName" + id, person.name);
+		//dwr.util.byId("pattern" + id).style.display = ""
+		//dwr.util.setValues(person);
+		//dwr.util.getValues(person);
+		//dwr.engine.beginBatch();  要做的事   dwr.engine.endBatch();
+
+		function init() {
+			dwr.util.useLoadingMessage();
+			fillTable();
+		}
+
+		var peopleCache = {};
+		var viewed = -1;
+
+		function fillTable() {
+
+			//people:Collection<Person>
+			//person:people中的一個Person物件，回傳內容包含其屬性及屬性值
+			//id: person的ID
+			//peopleCache[personID]: person物件的快取
+
+			People.getSmallCrowd(function(people) {
+				// Delete all the rows except for the "pattern" row
+				dwr.util.removeAllRows("peoplebody", {
+					filter : function(tr) {
+						return (tr.id != "pattern");
+					}
+				});
+				// Create a new set cloned from the pattern row
+				var person, id;
+				people.sort(function(p1, p2) {
+					return p1.name.localeCompare(p2.name);
+				});
+				for (var i = 0; i < people.length; i++) {
+					person = people[i];
+					id = person.id;
+					dwr.util.cloneNode("pattern", {
+						idSuffix : id
+					});
+					dwr.util.setValue("tableName" + id, person.name);
+					dwr.util.setValue("tableAge" + id, person.age);
+					dwr.util.setValue("tableAddress" + id, person.address);
+					dwr.util.setValue("tableSuperhero" + id,
+							person.superhero ? "Yes" : "No");
+					dwr.util.byId("pattern" + id).style.display = ""; // officially we should use table-row, but IE prefers "" for some reason
+					peopleCache[id] = person;
+				}
+			});
+		}
+
+		function editClicked(eleid) {
+			// we were an id of the form "edit{id}", eg "edit42". We lookup the "42"
+			var person = peopleCache[eleid.substring(4)];
+			dwr.util.setValues(person);
+		}
+
+		function deleteClicked(eleid) {
+			// we were an id of the form "delete{id}", eg "delete42". We lookup the "42"
+			var person = peopleCache[eleid.substring(6)];
+			if (confirm("Are you sure you want to delete " + person.name + "?")) {
+				dwr.engine.beginBatch();
+				People.deletePerson(person.id);
+				fillTable();
+				dwr.engine.endBatch();
+			}
+		}
+
+		function writePerson() {
+
+			//id不可null所以先設定一個可視的錯誤值
+			var person = {
+				id : viewed,
+				name : null,
+				address : null,
+				age : null,
+				superhero : null
+			};
+
+			dwr.util.getValues(person);
+
+			dwr.engine.beginBatch();
+			People.setPerson(person);
+			fillTable();
+			dwr.engine.endBatch();
+		}
+
+		function clearPerson() {
+			viewed = -1;
+			dwr.util.setValues({
+				id : -1,
+				name : null,
+				address : null,
+				salary : null
+			});
+		}
+	</script>
+
+
+</body>
+</html>
